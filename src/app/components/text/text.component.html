@@ -1,0 +1,49 @@
+<div class="col-sm-12 col-md-6 offset-md-3" style="margin-top:1em; background:#1e3799; padding:15px; border-radius:5px;">
+    <form [formGroup]="form" (ngSubmit)="onSubmit()">
+        <div class="alert alert-danger" *ngIf="form.errors">
+            Identification non valide
+        </div>
+        <div class="form-group">
+            <label style="color:white;">Nom</label>
+            <input class="form-control" formControlName="firstname">
+            <div *ngIf="firstname.pending" style="color:white;">Validation ...</div>
+            <div class="alert alert-danger" *ngIf="firstname.touched && firstname.invalid">
+                <div *ngIf="firstname.errors.required">Le nom est requis</div>
+                <div *ngIf="firstname.errors.minlength">Le nom doit comporter au moins 3 caractères</div>
+                <div *ngIf="firstname.errors.cannotContainSpace">Le nom ne doit comporter aucun espace</div>
+                <div *ngIf="firstname.errors.shouldBeUnique">Le nom doit être unique</div>
+            </div>
+        </div>
+        <div class="form-group">
+            <label style="color:white;">Prénom</label>
+            <input class="form-control" formControlName="lastname">
+            <div class="alert alert-danger" *ngIf="lastname.touched && lastname.invalid">
+                <div *ngIf="lastname.errors.required">Le prénom est requis</div>
+                <div *ngIf="lastname.errors.minlength">Le prénom doit comporter au moins 3 caractères</div>
+                <div *ngIf="lastname.errors.cannotContainSpace">Le prénom ne doit contenir aucun espace</div>
+            </div>
+        </div>
+        <div formGroupName="address">
+            <div class="form-group">
+                <label style="color:yellow">Ville</label>
+                <input class="form-control" formControlName="city">
+            </div>
+            <div class="form-group">
+                <label style="color:yellow;">Code postal</label>
+                <input class="form-control" formControlName="postalCode">
+            </div>
+        </div>
+        <div class="form-group">
+            <label style="color:white;">Détails</label>
+            <input class="form-control" #detail (keyup.enter)="addDetail(detail)">
+            <ul class="list-group" style="margin-top:10px;">
+                <li class="list-group-item list-group-item-info" *ngFor="let detail of details.controls">
+                    {{detail.value}}
+                </li>
+            </ul>
+        </div>
+        <div class="form-group">
+            <button class="btn btn-info" type="submit">Valider</button>
+        </div>
+    </form>
+</div>

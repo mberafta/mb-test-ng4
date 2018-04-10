@@ -1,0 +1,11 @@
+<div class="row">
+    <div class="col-md-12 text-center" style="margin-bottom: 10px;">
+        <h2>Jsonplaceholder data</h2>
+    </div>
+    <ul class="list-group" *ngIf="jsonData">
+        <li class="list-group-item" *ngFor="let item of jsonData">
+            <p><strong>Titre <br></strong>{{item.title}}</p>
+            <blockquote><strong>Contenu <br></strong>{{item.body}}</blockquote>
+        </li>
+    </ul>
+</div>
