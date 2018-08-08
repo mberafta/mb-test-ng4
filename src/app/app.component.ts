@@ -1,5 +1,6 @@
 import { Component, Input } from '@angular/core';
 import { AbstractControl, ValidationErrors } from '@angular/forms';
+import { Action, Reducer, Store } from './interface/redux/IRedux';
 
 @Component({
   selector: 'app-root',
@@ -15,10 +16,46 @@ export class AppComponent {
   textFromParent: string = "Text from parent";
   eventObj: any;
   param = {
-      size:5,
-      id:1 
+    size: 5,
+    id: 1
   };
 
+  action1: Action = { type: 'INCREMENT' };
+  action2: Action = { type: 'DECREMENT' };
+  action3: Action = { type: 'PLUS', payload: 7 };
+
+  constructor() {
+    let reducer: Reducer<number> = (state: number, action: Action) => {
+      if (action != null) {
+        switch (action.type) {
+          case 'DECREMENT':
+            state--;
+            break;
+          case 'INCREMENT':
+            state++;
+            break;
+          case 'PLUS':
+            state += Number(action.payload);
+            break;
+          default:
+            break;
+        }
+      }
+
+      return state;
+    };
+
+    let store = new Store<number>(reducer, 0);
+
+    let unsubscribe = store.subscribe(() => {
+      console.log('subscribed: ', store.getState());
+    });
+
+    store.dispatch(this.action1);
+    store.dispatch(this.action1);
+
+    unsubscribe();
+  }
 
   changeActiveProperty(): void {
     this.isActive = !this.isActive;

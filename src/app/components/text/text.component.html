@@ -1,4 +1,4 @@
-<div class="col-sm-12 col-md-6 offset-md-3" style="margin-top:1em; background:#1e3799; padding:15px; border-radius:5px;">
+<!-- <div class="col-sm-12 col-md-6 offset-md-3" style="margin-top:1em; background:#1e3799; padding:15px; border-radius:5px;">
     <form [formGroup]="form" (ngSubmit)="onSubmit()">
         <div class="alert alert-danger" *ngIf="form.errors">
             Identification non valide
@@ -46,4 +46,22 @@
             <button class="btn btn-info" type="submit">Valider</button>
         </div>
     </form>
+</div> -->
+
+<div class="row">
+    <div class="col-6 offset-md-3">
+        <button class="btn btn-info" (click)="addItem()">Nouvel item</button>
+        <ul class="list-group" style="margin-top:1em;">
+            <li class="list-group-item" 
+                style="margin-top:5px;"
+                *ngFor="let item of items; let i = index;" [@fade]>
+                <p>{{item}}</p>
+                <div class="btn-group">
+                    <button class="btn btn-primary" (click)="removeItem(i)">
+                        <span> x </span>
+                    </button>
+                </div>
+            </li>
+        </ul>
+    </div>
 </div>

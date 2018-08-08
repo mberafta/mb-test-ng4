@@ -44,7 +44,7 @@ export class HttpComponent implements OnDestroy {
             .subscribe((response: Response) => {
                 this.jsonData = response.json()
                     .slice(0, this.routeParam.size)
-                    .filter((data)=> {
+                    .filter((data) => {
                         return data.id == this.routeParam.id;
                     })
             });
