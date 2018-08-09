@@ -1,49 +1,71 @@
-import { ListenerCallback } from './IRedux';
-export interface Action {
-    type: string, // Identifie l'action
-    payload?: any
+export interface IAction {
+    type: String,
+    payload: any
 }
 
-export interface Reducer<T> {
-    (state: T, action: Action): T;
+export interface IReducer<T> {
+    (action: IAction, state: T): T // N'importe quelle méthode prenant une action et un état du type T en paramètres
 }
 
-export interface ListenerCallback {
-    (): void;
+export interface IListener<T> {
+    name: String,
+    notify(value: any): void;
+    unsubscribe(): void
 }
 
-interface UnsubscribeCallback {
-    (): void;
+export interface ICallback {
+    (): void
 }
 
 export class Store<T>{
-    private _state: T;
-    private _listeners: ListenerCallback[] = [];
+    public state: T;
+    public listeners: IListener<T>[] = [];
 
-    constructor(public reducer: Reducer<T>, initialState: T) {
-        this._state = initialState;
+    constructor(private reducer: IReducer<T>, firstState: T) {
+        this.state = firstState;
     }
 
-    getState(): T {
-        return this._state;
+    dispatch(action: IAction) {
+        this.state = this.reducer(action, this.state);
+        this.listeners.forEach((l) => {
+            l.notify(this.state);
+        });
     }
 
-    setState(stateValue: T) {
-        this._state = stateValue;
+    subscribe(listener: IListener<T>) {
+        this.listeners.push(listener);
     }
 
-    dispatch(action: Action): void {
-        let state = this.getState();
-        state = this.reducer(state, action);
-        this.setState(state);
-        this._listeners.forEach((listener:ListenerCallback) => listener());
+    unsubscribe(listener: IListener<T>) {
+        this.listeners = this.listeners.filter(l => l != listener);
     }
+}
 
-    subscribe(listener: ListenerCallback): UnsubscribeCallback {
-        this._listeners.push(listener);
-        return () => {
-            this._listeners = this._listeners.filter(l => l !== listener);
+export class MessageActions{
+    public static addMessage(message:string): IAddMessageAction{
+        return {
+            type:'ADD_MESSAGE',
+            message:message,
+            payload:null
         }
     }
+    public static deleteMessage(index:number): IDeleteMessageAction{
+        return{
+            type:'DELETE_MESSAGE',
+            index:index,
+            payload:null
+        }
+    }
+}
 
+export interface IAppState {
+    messages: String[];
+}
+
+export interface IAddMessageAction extends IAction {
+    message: String;
+}
+
+export interface IDeleteMessageAction extends IAction {
+    index: number;
 }
